@@ -546,7 +546,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 it['quality'] = val
             self.mark_dirty()
             self.refresh_tree()
-            def on_type_changed(self, text):
+    def on_type_changed(self, text):
     """
     Обновляет выпадающий список редкостей при смене типа предмета.
     Вставьте этот метод внутрь класса MainWindow (например после apply_styles).
