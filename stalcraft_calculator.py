@@ -130,9 +130,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.input_buy = QtWidgets.QLineEdit("0")
         self.input_sell = QtWidgets.QLineEdit("0")
 
+        # Используем QRegularExpressionValidator (PySide6)
+        rx = QtCore.QRegularExpression(r'[0-9\s,]*')
+        validator = QtGui.QRegularExpressionValidator(rx)
         self.input_type.currentTextChanged.connect(self.on_type_changed)
-        self.input_buy.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp(r'[0-9\s,]*')))
-        self.input_sell.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp(r'[0-9\s,]*')))
+        self.input_buy.setValidator(validator)
+        self.input_sell.setValidator(validator)
 
         form_layout.addRow("Название", self.input_name)
         form_layout.addRow("Тип", self.input_type)
