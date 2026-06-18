@@ -546,6 +546,28 @@ class MainWindow(QtWidgets.QMainWindow):
                 it['quality'] = val
             self.mark_dirty()
             self.refresh_tree()
+            def on_type_changed(self, text):
+    """
+    Обновляет выпадающий список редкостей при смене типа предмета.
+    Вставьте этот метод внутрь класса MainWindow (например после apply_styles).
+    """
+    # Сохраним текущую выбранную редкость, если она есть
+    current = self.input_quality.currentText() if self.input_quality.count() > 0 else None
+
+    # Блокируем сигналы на время изменения, чтобы избежать рекурсии
+    self.input_quality.blockSignals(True)
+    self.input_quality.clear()
+
+    qualities = ARTIFACT_QUALITIES if text == 'Артефакт' else OTHER_QUALITIES
+    self.input_quality.addItems(qualities)
+
+    # Восстановим прежний выбор, если он присутствует в новом списке
+    if current and current in qualities:
+        self.input_quality.setCurrentIndex(qualities.index(current))
+    else:
+        self.input_quality.setCurrentIndex(0)
+
+    self.input_quality.blockSignals(False)
 
     # --- Helpers
     def update_totals_labels(self):
