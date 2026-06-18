@@ -21,33 +21,20 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install PySide6 pyinstaller
+        shell: pwsh
 
       - name: Show PySide6 path
         run: |
-          python - <<'PY'
-          import os, PySide6, sys
-          p = os.path.join(os.path.dirname(PySide6.__file__), "plugins")
-          print("PY_SIDE_PLUGINS_PATH=", p)
-          PY
+          $p = (python -c "import os, PySide6; print(os.path.join(os.path.dirname(PySide6.__file__), 'plugins'))").Trim()
+          Write-Host "PY_SIDE_PLUGINS_PATH=$p"
+        shell: pwsh
 
       - name: Build with PyInstaller
         run: |
-          python - <<'PY'
-          import os, PySide6, subprocess, sys
-          p = os.path.join(os.path.dirname(PySide6.__file__), "plugins")
-          print("Using plugins path:", p)
-          cmd = [
-            "pyinstaller",
-            "--noconfirm",
-            "--onefile",
-            "--windowed",
-            "--add-data", f"{p};PySide6\\plugins",
-            "--name", "StalcraftCalculator",
-            "stalcraft_calculator.py"
-          ]
-          print("Running:", " ".join(cmd))
-          subprocess.check_call(cmd)
-          PY
+          $p = (python -c "import os, PySide6; print(os.path.join(os.path.dirname(PySide6.__file__), 'plugins'))").Trim()
+          Write-Host "Using plugins path: $p"
+          pyinstaller --noconfirm --onefile --windowed --add-data "$p;PySide6\plugins" --name StalcraftCalculator stalcraft_calculator.py
+        shell: pwsh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
